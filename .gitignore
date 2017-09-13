@@ -20,4 +20,7 @@ erl_crash.dump
 *.ez
 
 # Binaries
-apps/*/bin
+bin
+
+# DETS
+buckler_bot_repo

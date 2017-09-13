@@ -5,7 +5,10 @@ defmodule BucklerBot.Application do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(Agala.Bot, [telegram_bot_configuration()], id: "buckler")
+      supervisor(Agala.Bot, [telegram_bot_configuration()], id: "buckler"),
+      supervisor(Registry, [:unique, BucklerBot.Registry]),
+      supervisor(BucklerBot.UserSupervisor, []),
+      supervisor(BucklerBot.Repo, [])
     ]
 
     opts = [strategy: :one_for_one, name: BucklerBot.Supervisor]
@@ -17,6 +20,7 @@ defmodule BucklerBot.Application do
       name: "buckler",
       provider: Agala.Provider.Telegram,
       handler: BucklerBot.Handler,
+      fallback: BucklerBot.Fallback,
       provider_params: %Agala.Provider.Telegram.Conn.ProviderParams{
         token: System.get_env("TELEGRAM_TOKEN"),
         poll_timeout: :infinity
