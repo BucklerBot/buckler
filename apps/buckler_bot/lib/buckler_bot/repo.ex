@@ -40,7 +40,7 @@ defmodule BucklerBot.Repo do
   end
 
   def update_messages_to_delete(chat_id, user_id, message_id) do
-    [{_, user}] = :dets.lookup(:buckler_bot_repo, {chat_id, user_id})
+    [{_, user}] = :dets.lookup(db_name(), {chat_id, user_id})
     :dets.insert(db_name(), {{chat_id, user_id}, user |> Map.put(:message_to_delete, message_id)})
   end
 
