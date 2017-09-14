@@ -82,6 +82,8 @@ defmodule BucklerBot.Handler do
             |> delete_message(chat_id, user.message_to_delete)
             |> Agala.response_with()
 
+            Repo.delete_user(chat_id, user_id)
+
             conn
             |> delete_message(chat_id, message_id)
           false ->
