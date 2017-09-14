@@ -24,7 +24,7 @@ TELEGRAM_TOKEN=TOKEN DB_NAME=prodb iex -S mix
 ## Tests
 
 ```elixir
-TELEGRAM_TOKEN=TOKEN DB_NAME=testdb iex -S mix
+TELEGRAM_TOKEN=TOKEN DB_NAME=testdb mix test
 ```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
