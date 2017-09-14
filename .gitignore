@@ -24,3 +24,5 @@ bin
 
 # DETS
 buckler_bot_repo
+
+/apps/buckler_bot/testdb
