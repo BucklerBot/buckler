@@ -13,7 +13,20 @@ def deps do
 end
 ```
 
+## Run
+
+As console:
+
+```elixir
+TELEGRAM_TOKEN=TOKEN DB_NAME=prodb iex -S mix
+```
+
+## Tests
+
+```elixir
+TELEGRAM_TOKEN=TOKEN DB_NAME=testdb iex -S mix
+```
+
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/buckler_bot](https://hexdocs.pm/buckler_bot).
-
