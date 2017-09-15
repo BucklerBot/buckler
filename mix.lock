@@ -1,4 +1,4 @@
-%{"agala": {:git, "https://github.com/agalaframework/agala.git", "fa336d0e9feb747033db90b8d624f9597061d7b4", [branch: "develop"]},
+%{"agala": {:git, "https://github.com/agalaframework/agala.git", "0d0eac7ae749f27486364efbdbfc3cd88ae380e1", [branch: "develop"]},
   "agala_telegram": {:git, "https://github.com/agalaframework/agala_telegram", "08bcbcd204d7d5314e1d1a4546e300b6da1a4221", []},
   "certifi": {:hex, :certifi, "2.0.0", "a0c0e475107135f76b8c1d5bc7efb33cd3815cb3cf3dea7aefdd174dabead064", [:rebar3], [], "hexpm"},
   "gettext": {:hex, :gettext, "0.13.1", "5e0daf4e7636d771c4c71ad5f3f53ba09a9ae5c250e1ab9c42ba9edccc476263", [:mix], [], "hexpm"},

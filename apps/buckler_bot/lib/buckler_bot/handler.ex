@@ -1,6 +1,7 @@
 defmodule BucklerBot.Handler do
   use Agala.Chain.Builder
   use Agala.Provider.Telegram, :handler
+  import Agala.Conn.Multi
 
   chain Agala.Chain.Loopback
   chain :handle
@@ -10,7 +11,6 @@ defmodule BucklerBot.Handler do
   require Logger
 
   def handle(conn = %Agala.Conn{
-    request_bot_params: %Agala.BotParams{name: name},
     request: %{"message" => %{"chat" => %{"id" => chat_id}, "left_chat_member" => %{"id" => user_id}}}
   }, _) do
     case Repo.user_unauthorized?(chat_id, user_id) do
@@ -76,28 +76,17 @@ defmodule BucklerBot.Handler do
   }, _) do
     case Repo.user_unauthorized?(chat_id, user_id) do
       {true, user} ->
-        case text == user.answer do
-          true ->
-            conn
-            |> delete_message(chat_id, user.message_to_delete)
-            |> Agala.response_with()
-
-            Repo.delete_user(chat_id, user_id)
-
-            conn
-            |> delete_message(chat_id, message_id)
-          false ->
-            conn
-            |> delete_message(chat_id, user.message_to_delete)
-            |> Agala.response_with()
-
-            conn
-            |> delete_message(chat_id, message_id)
-            |> Agala.response_with
-
-            Repo.delete_user(chat_id, user_id)
-            conn
-            |> kick_chat_member(chat_id, user_id)
+        Repo.delete_user(chat_id, user_id)
+        multi do
+          case text == user.answer do
+            true ->
+              add delete_message(conn, chat_id, user.message_to_delete)
+              add delete_message(conn, chat_id, message_id)
+            false ->
+              add delete_message(conn, chat_id, user.message_to_delete)
+              add delete_message(conn, chat_id, message_id)
+              add kick_chat_member(conn, chat_id, user_id)
+          end
         end
       {false, _} -> conn |> Agala.Conn.halt
     end
@@ -120,17 +109,12 @@ defmodule BucklerBot.Handler do
     case Repo.user_unauthorized?(chat_id, user_id) do
       {true, user} ->
         Logger.warn("User unauthorized")
-        conn
-        |> delete_message(chat_id, message_id)
-        |> Agala.response_with
-
-        conn
-        |> delete_message(chat_id, user.message_to_delete)
-        |> Agala.response_with()
-
         Repo.delete_user(chat_id, user_id)
-        conn
-        |> kick_chat_member(chat_id, user_id)
+        multi do
+          add delete_message(conn, chat_id, message_id)
+          add delete_message(conn, chat_id, user.message_to_delete)
+          add kick_chat_member(conn, chat_id, user_id)
+        end
       _ -> conn |> Agala.Conn.halt
     end
   end

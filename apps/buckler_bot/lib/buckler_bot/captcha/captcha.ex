@@ -7,6 +7,8 @@ defmodule BucklerBot.Captcha do
   ]
 
   def generate_captcha do
-    %Captcha{captcha: "13+25", answer: "38"}
+    lh = :rand.uniform(100)
+    rh = :rand.uniform(100)
+    %Captcha{captcha: "#{lh}+#{rh}=...", answer: "#{lh+rh}"}
   end
 end
