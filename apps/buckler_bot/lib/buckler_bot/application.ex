@@ -22,7 +22,7 @@ defmodule BucklerBot.Application do
       handler: BucklerBot.Handler,
       fallback: BucklerBot.Fallback,
       provider_params: %Agala.Provider.Telegram.Conn.ProviderParams{
-        token: System.get_env("TELEGRAM_TOKEN"),
+        token: Application.get_env(:buckler_bot, :telegram)[:token],
         poll_timeout: :infinity
       }
     }
