@@ -1,0 +1,2 @@
+defmodule DB do
+end
