@@ -15,7 +15,7 @@ set :branch, 'master'
 set :shared_dirs, %w[elixir_logs]
 set :forward_agent, true
 set :execution_mode, :system
-set :ssh_options, '-o StrictHostKeyChecking=no -o AllowAgentForwarding=yes'
+set :ssh_options, '-o StrictHostKeyChecking=no -o ForwardAgent=yes'
 
 task setup: :environment do
   command %(mkdir -p "#{fetch(:deploy_to)}/shared/elixir_logs")
