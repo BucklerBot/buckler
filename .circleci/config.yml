@@ -12,3 +12,9 @@ jobs:
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: mix do deps.get, compile
+      - deploy:
+          name: Deploy Master to Server
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              DEPLOY_TARGET=45.32.241.56 mina deploy
+            fi
