@@ -8,9 +8,6 @@ jobs:
         environment:
           POSTGRES_USER: postgres
     steps:
-      - type: shell
-        name: Install System Dependencies
-        command: apt-key update && apt-get update -qq && apt-get install -y build-essential erlang-dev erlang-parsetools
       - checkout
       - run: mix local.hex --force
       - run: mix local.rebar --force
