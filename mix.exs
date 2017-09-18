@@ -5,7 +5,9 @@ defmodule Buckler.Mixfile do
     [apps_path: "apps",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     aliases: aliases()
+   ]
   end
 
   # Dependencies can be Hex packages:
@@ -23,6 +25,16 @@ defmodule Buckler.Mixfile do
   defp deps do
     [
       {:distillery, "~> 1.3", runtime: false},
+    ]
+  end
+
+  defp aliases do
+    [
+      "release.update": [
+        "deps.get",
+        "compile",
+        "release"
+      ]
     ]
   end
 end
