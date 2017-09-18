@@ -30,16 +30,12 @@ jobs:
       - restore_cache:
           keys:
             - v1-repo-{{ checksum ".circle-sha" }}
-      - run:
-        name: install hex
-        command: mix local.hex --force
-      - run:
-        name: download geps
-        run: mix do deps.get
+      - run: mix local.hex --force
+      - run: mix do deps.get
       - save_cache:
-        key: v1-deps-{{ checksum ".circle-sha" }}
-        paths:
-          - ~/buckler/deps
+          key: v1-deps-{{ checksum ".circle-sha" }}
+          paths:
+            - ~/buckler/deps
   test:
     working_directory: ~/buckler
     docker:
