@@ -32,9 +32,11 @@ jobs:
             - v1-repo-{{ checksum ".circle-sha" }}
       - run: mix local.hex --force
       - run: mix do deps.get
+      - run: mix do compile
       - save_cache:
-          key: v1-deps-{{ checksum ".circle-sha" }}
+          key: v1-build-{{ checksum ".circle-sha" }}
           paths:
+            - ~/buckler/_build
             - ~/buckler/deps
   test:
     working_directory: ~/buckler
@@ -52,7 +54,7 @@ jobs:
             - v1-repo-{{ checksum ".circle-sha" }}
       - restore_cache:
           keys:
-            - v1-deps-{{ checksum ".circle-sha" }}
+            - v1-build-{{ checksum ".circle-sha" }}
       - run: mix do deps.get
       - run:
           working_directory: ~/buckler/apps/buckler_bot
@@ -61,6 +63,29 @@ jobs:
             TELEGRAM_TOKEN: 123
             DB_NAME: testdb
           command: mix test
+  deploy:
+    working_directory: ~/buckler
+    docker:
+      - image: noma4i/docker-elixir:latest
+      - image: postgres:9.4.1
+        environment:
+          POSTGRES_USER: postgres
+    steps:
+      - run:
+          name: save SHA to a file
+          command: echo $CIRCLE_SHA1 > .circle-sha
+      - restore_cache:
+          keys:
+            - v1-repo-{{ checksum ".circle-sha" }}
+      - restore_cache:
+          keys:
+            - v1-build-{{ checksum ".circle-sha" }}
+      - run:
+          name: Deploy Master to Server
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              DEPLOY_TARGET=45.32.241.56 bundle exec mina deploy
+            fi
 workflows:
   version: 2
   build-test-deploy:
@@ -72,3 +97,6 @@ workflows:
       - test:
           requires:
             - build
+      - deploy:
+          requires:
+            - test
