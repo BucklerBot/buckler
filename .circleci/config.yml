@@ -28,5 +28,5 @@ jobs:
           name: Deploy Master to Server
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              DEPLOY_TARGET=45.32.241.56 mina deploy
+              DEPLOY_TARGET=45.32.241.56 bundle exec mina deploy
             fi
