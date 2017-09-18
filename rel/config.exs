@@ -38,7 +38,7 @@ environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :"s<jYNRfYQEG=[bJ*7b(!|6tZ<fHrEc>2WC{LZ4xjxkAmR%pBgui=]Q%f/Y`5(wdj"
-  set output_dir: "rel/buckler"
+  set output_dir: "rel/buckler_bot"
 end
 
 # You may define one or more releases in this file.

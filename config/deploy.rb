@@ -36,7 +36,6 @@ task deploy: :environment do
     command %(MIX_ENV=prod mix release.update)
     on :launch do
       in_path(fetch(:current_path)) do
-        command %(cp ./buckler_bot.eye /home/deploy/)
         command %(sudo service eye restart)
         command %(sudo eye restart buckler_bot)
       end
