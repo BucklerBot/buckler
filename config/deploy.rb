@@ -33,7 +33,6 @@ task deploy: :environment do
   deploy do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
-    command %(MIX_ENV=prod mix deps.get)
     command %(MIX_ENV=prod mix release.update)
     on :launch do
       in_path(fetch(:current_path)) do
