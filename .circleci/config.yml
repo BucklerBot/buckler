@@ -55,8 +55,12 @@ jobs:
             - v1-deps-{{ checksum ".circle-sha" }}
       - run: mix do deps.get
       - run:
+          working_directory: ~/buckler/apps/buckler_bot
           name: Test
-          command: TELEGRAM_TOKEN=123 DB_NAME=testdb cd apps/buckler_bot && mix test
+          environment:
+            TELEGRAM_TOKEN: 123
+            DB_NAME: testdb
+          command: mix test
 workflows:
   version: 2
   build-test-deploy:
