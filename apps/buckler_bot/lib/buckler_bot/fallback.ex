@@ -23,6 +23,6 @@ defmodule BucklerBot.Fallback do
   end
 
   def handle_fallback(conn) do
-    Logger.warn("Unexpected fallback: #{inspect conn.fallback}")
+    Logger.debug("Unexpected fallback: #{inspect conn.fallback}")
   end
 end

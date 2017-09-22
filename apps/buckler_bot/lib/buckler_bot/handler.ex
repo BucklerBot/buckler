@@ -43,6 +43,7 @@ defmodule BucklerBot.Handler do
       }
     }
   }, _) do
+    Logger.debug "New user connected: #{first_name}"
     with %{captcha: captcha, answer: answer} <- BucklerBot.Captcha.generate_captcha(),
          _ <- Repo.new_user(conn, answer)
     do
@@ -84,7 +85,6 @@ defmodule BucklerBot.Handler do
       {true, user} ->
         Repo.delete_user(chat_id, user_id)
         multi do
-          Logger.warn("user answer = #{user.answer}, text = #{text}")
           case text == user.answer do
             true ->
               add delete_message(conn, chat_id, user.message_to_delete)
@@ -95,7 +95,8 @@ defmodule BucklerBot.Handler do
               add kick_chat_member(conn, chat_id, user_id)
           end
         end
-      {false, _} -> conn |> Agala.Conn.halt
+      {false, _} ->
+        conn |> Agala.Conn.halt
     end
   end
 
@@ -115,7 +116,6 @@ defmodule BucklerBot.Handler do
   }, _) do
     case Repo.user_unauthorized?(chat_id, user_id) do
       {true, user} ->
-        Logger.warn("User unauthorized")
         Repo.delete_user(chat_id, user_id)
         multi do
           add delete_message(conn, chat_id, message_id)
