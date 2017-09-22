@@ -8,3 +8,5 @@ config :buckler_bot,
 
 config :buckler_bot, BucklerBot.Repo,
   db_name: System.get_env("DB_NAME")
+
+import_config "#{Mix.env}.exs"

@@ -11,6 +11,12 @@ defmodule BucklerBot.Handler do
   require Logger
 
   def handle(conn = %Agala.Conn{
+    request: %{"message" => %{"chat" => %{"type" => "private"}}}
+  }, _) do
+    BucklerBot.Handlers.Private.call(conn, [])
+  end
+
+  def handle(conn = %Agala.Conn{
     request: %{"message" => %{"chat" => %{"id" => chat_id}, "left_chat_member" => %{"id" => user_id}}}
   }, _) do
     case Repo.user_unauthorized?(chat_id, user_id) do
@@ -46,10 +52,10 @@ defmodule BucklerBot.Handler do
         gettext("""
         Hello, *%{first_name}*!
 
-        Please, tell us:
+        Please, calculate:
         *%{captcha}*
 
-        If you will not answer - you will be banned from the channel...
+        If you don't answer - you'll get banned from the channel...
         Good luck!
         """,
         first_name: first_name, captcha: captcha),
@@ -78,6 +84,7 @@ defmodule BucklerBot.Handler do
       {true, user} ->
         Repo.delete_user(chat_id, user_id)
         multi do
+          Logger.warn("user answer = #{user.answer}, text = #{text}")
           case text == user.answer do
             true ->
               add delete_message(conn, chat_id, user.message_to_delete)
