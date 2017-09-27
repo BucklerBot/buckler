@@ -7,9 +7,6 @@ jobs:
       - image: postgres:9.4.1
         environment:
           POSTGRES_USER: postgres
-          TELEGRAM_TOKEN: 123
-          DB_NAME: testdb
-
     steps:
       - checkout
       - type: cache-restore
@@ -27,7 +24,13 @@ jobs:
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: MIX_ENV=test mix do deps.get, compile
-      - run: MIX_ENV=test mix test
+      - run:
+          working_directory: ~/buckler/apps/buckler_bot
+          name: Test
+          environment:
+            TELEGRAM_TOKEN: 123
+            DB_NAME: testdb
+          command: mix test
       - deploy:
           name: Deploy Master to Server
           command: |
