@@ -1,8 +1,6 @@
 defmodule BucklerBot.Handlers.Private do
   use Agala.Provider.Telegram, :handler
-  import Agala.Conn.Multi
 
-  alias BucklerBot.Repo
   import BucklerBot.Gettext
   require Logger
 

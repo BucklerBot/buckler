@@ -1,0 +1,23 @@
+## This file is a PO Template file.
+##
+## `msgid`s here are often extracted from source code.
+## Add new translations manually only if they're dynamic
+## translations that can't be statically extracted.
+##
+## Run `mix gettext.extract` to bring this file up to
+## date. Leave `msgstr`s empty as changing them here as no
+## effect: edit them in PO (`.po`) files instead.
+msgid ""
+msgstr ""
+
+#: lib/buckler_bot/captcha/captcha.ex:16
+msgid "*Calculate*: *%{lh}+%{rh}=...*"
+msgstr ""
+
+#: lib/buckler_bot/handlers/private.ex:21
+msgid "Hello, %{first_name}!\n\nI'm *BucklerBot*, and I'll defend your group or chat from dirsty spammers.\n\n1. Add me as Administrator to your group.\n2. Give me only two rights: to *Ban users* and to *Delete messages*\n3. *???*\n4. Enjoy!\n\nIf you have any questions or issues - welcome to our project's\nrepo - https://github.com/BucklerBot/buckler\n"
+msgstr ""
+
+#: lib/buckler_bot/i18n.ex:8
+msgid "Hello, *%{name}*!\n\nPlease, solve the captcha:\n\n%{captcha}\n\nAttempts remaining: *%{attempts}*\nIf you don't answer - you'll get banned from the channel...\nGood luck!\n"
+msgstr ""

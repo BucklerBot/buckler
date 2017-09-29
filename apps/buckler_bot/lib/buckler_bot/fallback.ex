@@ -1,7 +1,7 @@
 defmodule BucklerBot.Fallback do
   require Logger
 
-  def handle_fallback(conn = %{fallback: %{
+  def handle_fallback(%{fallback: %{
     "ok" => true,
     "result" => %{
       "chat" => %{
@@ -19,7 +19,28 @@ defmodule BucklerBot.Fallback do
       },
     }
   }) do
-    BucklerBot.Repo.update_messages_to_delete(chat_id, user_id, message_id)
+    DB.Connections.update_welcome_message(chat_id, user_id, message_id)
+  end
+
+  def handle_fallback(%{fallback: %{
+    "ok" => true,
+    "result" => %{
+      "chat" => %{
+        "id" => chat_id
+      },
+      "message_id" => message_id,
+      "text" => _
+      }
+    },
+    request: %{
+      "message" => %{
+        "from" => %{
+          "id" => user_id
+        },
+      },
+    }
+  }) do
+    DB.Connections.update_welcome_message(chat_id, user_id, message_id)
   end
 
   def handle_fallback(conn) do

@@ -8,7 +8,8 @@ defmodule BucklerBot.Application do
       supervisor(Agala.Bot, [telegram_bot_configuration()], id: "buckler"),
       #supervisor(Registry, [:unique, BucklerBot.Registry]),
       #supervisor(BucklerBot.UserSupervisor, []),
-      supervisor(BucklerBot.Repo, [])
+      supervisor(BucklerBot.Repo, []),
+      supervisor(DB.Repo, [])
     ]
 
     opts = [strategy: :one_for_one, name: BucklerBot.Supervisor]

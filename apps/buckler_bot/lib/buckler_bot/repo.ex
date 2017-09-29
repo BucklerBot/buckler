@@ -20,8 +20,7 @@ defmodule BucklerBot.Repo do
         "new_chat_member" => %{
           "first_name" => name,
           "id" => user_id
-        },
-        "message_id" => message_id
+        }
       },
     }
   }, answer) do

@@ -1,0 +1,23 @@
+## `msgid`s in this file come from POT (.pot) files.
+##
+## Do not add, change, or remove `msgid`s manually here as
+## they're tied to the ones in the corresponding POT file
+## (with the same domain).
+##
+## Use `mix gettext.extract --merge` or `mix gettext.merge`
+## to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: ru\n"
+
+#: lib/buckler_bot/captcha/captcha.ex:16
+msgid "*Calculate*: *%{lh}+%{rh}=...*"
+msgstr "*Вычисли*: *%{lh}+%{rh}=...*"
+
+#: lib/buckler_bot/handlers/private.ex:21
+msgid "Hello, %{first_name}!\n\nI'm *BucklerBot*, and I'll defend your group or chat from dirsty spammers.\n\n1. Add me as Administrator to your group.\n2. Give me only two rights: to *Ban users* and to *Delete messages*\n3. *???*\n4. Enjoy!\n\nIf you have any questions or issues - welcome to our project's\nrepo - https://github.com/BucklerBot/buckler\n"
+msgstr "Привет, %{first_name}!\n\nЯ - *BucklerBot*, and I'll defend your group or chat from dirsty spammers.\n\n1. Add me as Administrator to your group.\n2. Give me only two rights: to *Ban users* and to *Delete messages*\n3. *???*\n4. Enjoy!\n\nIf you have any questions or issues - welcome to our project's\nrepo - https://github.com/BucklerBot/buckler\n"
+
+#: lib/buckler_bot/i18n.ex:8
+msgid "Hello, *%{name}*!\n\nPlease, solve the captcha:\n\n%{captcha}\n\nAttempts remaining: *%{attempts}*\nIf you don't answer - you'll get banned from the channel...\nGood luck!\n"
+msgstr "Привет, *%{name}*!\n\nПожалуйста, реши капчу:\n\n%{captcha}\n\nОсталось попыток: *%{attempts}*\nЕсли не решишь - будешь забанен навеки...\nУдачи!\n"
