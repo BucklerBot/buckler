@@ -12,7 +12,7 @@ defmodule DB.Connections do
 
   def get_chatuser(chat_id, user_id), do: Repo.one(chatuser_query(chat_id, user_id))
 
-  def get_chat(chat_id) do
+  def get_or_create_chat(chat_id) do
     case Repo.get(Chat, chat_id) do
       nil -> create_chat(%{id: chat_id})
       chat -> {:ok, chat}
