@@ -39,7 +39,7 @@ defmodule DB.Connections do
   end
 
   def connect_user(chat_id, user_id, name, answer, connected_message_id) do
-    with {:ok, chat} <- get_chat(chat_id) do
+    with {:ok, chat} <- get_or_create_chat(chat_id) do
       create_chatuser(chat, user_id, name, answer, connected_message_id)
     else
       _ ->

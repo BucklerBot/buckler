@@ -40,7 +40,8 @@ defmodule BucklerBot.Handler do
         },
         "new_chat_member" => %{
           "first_name" => first_name,
-          "id" => user_id
+          "id" => user_id,
+          "is_bot" => false
         }
       }
     }
