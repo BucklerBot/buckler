@@ -46,7 +46,7 @@ defmodule BucklerBot.Handler do
     }
   }, _) do
     Logger.debug "New user connected: #{first_name}"
-    with {:ok, chat} <- Connections.get_chat(chat_id),
+    with {:ok, chat} <- Connections.get_or_create_chat(chat_id),
         %{captcha: captcha, answer: answer} <- BucklerBot.Captcha.generate_captcha(chat.lang),
         {:ok, user} <- Connections.connect_user(chat_id, user_id, first_name, answer, message_id)
     do
@@ -110,32 +110,37 @@ defmodule BucklerBot.Handler do
       Connections.delete_chatuser(user.chat_id, user.user_id)
     end
   end
+  def process_captcha_check(
+    false,
+    conn,
+    message_id,
+    %{attempts: attempts} = user
+  ) when attempts < 2  do
+    # ban here
+    multi do
+      {:ok, user} = Connections.delete_chatuser(user.chat_id, user.user_id)
+      add delete_message(conn, user.chat_id, user.welcome_message_id)
+      add delete_message(conn, user.chat_id, user.connected_message_id)
+      add delete_message(conn, user.chat_id, message_id)
+      add kick_chat_member(conn, user.chat_id, user.user_id)
+    end
+  end
   def process_captcha_check(false, conn, message_id, user) do
-    case user.attempts < 2 do
-      true -> # ban here
-        multi do
-          {:ok, user} = Connections.delete_chatuser(user.chat_id, user.user_id)
-          add delete_message(conn, user.chat_id, user.welcome_message_id)
-          add delete_message(conn, user.chat_id, user.connected_message_id)
-          add delete_message(conn, user.chat_id, message_id)
-          add kick_chat_member(conn, user.chat_id, user.user_id)
-        end
-      false -> # decrease attempt
-        with %{captcha: captcha, answer: answer} <- BucklerBot.Captcha.generate_captcha(user.lang),
-              {:ok, user} <- Connections.decrease_attempts(user.chat_id, user.user_id, answer)
-        do
-          multi do
-            add delete_message(conn, user.chat_id, user.welcome_message_id)
-            add delete_message(conn, user.chat_id, message_id)
-            add send_message(
-              conn,
-              user.chat_id,
-              I18n.welcome_message(user.lang, user.name, captcha, user.attempts),
-              reply_to_message_id: user.connected_message_id,
-              parse_mode: "Markdown"
-            )
-          end
-        end
+    # decrease attempt
+    with %{captcha: captcha, answer: answer} <- BucklerBot.Captcha.generate_captcha(user.lang),
+          {:ok, user} <- Connections.decrease_attempts(user.chat_id, user.user_id, answer)
+    do
+      multi do
+        add delete_message(conn, user.chat_id, user.welcome_message_id)
+        add delete_message(conn, user.chat_id, message_id)
+        add send_message(
+          conn,
+          user.chat_id,
+          I18n.welcome_message(user.lang, user.name, captcha, user.attempts),
+          reply_to_message_id: user.connected_message_id,
+          parse_mode: "Markdown"
+        )
+      end
     end
   end
 end
