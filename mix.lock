@@ -1,5 +1,5 @@
-%{"agala": {:git, "https://github.com/agalaframework/agala.git", "eccad74dcfab83d7ac6d6ebb9b69a24e4967b137", [branch: "develop"]},
-  "agala_telegram": {:git, "https://github.com/agalaframework/agala_telegram", "f34cb2902ef320444b823568e3ae5c6f0f3f0a7d", []},
+%{"agala": {:hex, :agala, "2.0.0-rc2", "64306b203be6a0b10234d4081b02da9fd3a50bcf87df608a591c8393909759a9", [:mix], [], "hexpm"},
+  "agala_telegram": {:git, "https://github.com/agalaframework/agala_telegram", "423d61fcfc79b36899de38df31f1fa2e0da1cac4", []},
   "certifi": {:hex, :certifi, "2.0.0", "a0c0e475107135f76b8c1d5bc7efb33cd3815cb3cf3dea7aefdd174dabead064", [:rebar3], [], "hexpm"},
   "connection": {:hex, :connection, "1.0.4", "a1cae72211f0eef17705aaededacac3eb30e6625b04a6117c1b2db6ace7d5976", [:mix], [], "hexpm"},
   "db_connection": {:hex, :db_connection, "1.1.2", "2865c2a4bae0714e2213a0ce60a1b12d76a6efba0c51fbda59c9ab8d1accc7a8", [:mix], [{:connection, "~> 1.0.2", [hex: :connection, repo: "hexpm", optional: false]}, {:poolboy, "~> 1.5", [hex: :poolboy, repo: "hexpm", optional: true]}, {:sbroker, "~> 1.0", [hex: :sbroker, repo: "hexpm", optional: true]}], "hexpm"},
