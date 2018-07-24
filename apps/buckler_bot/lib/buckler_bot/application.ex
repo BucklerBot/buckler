@@ -6,9 +6,9 @@ defmodule BucklerBot.Application do
 
     children = [
       supervisor(Agala.Bot, [telegram_bot_configuration()], id: "buckler"),
-      #supervisor(Registry, [:unique, BucklerBot.Registry]),
-      #supervisor(BucklerBot.UserSupervisor, []),
-      supervisor(BucklerBot.Repo, []),
+      # supervisor(Registry, [:unique, BucklerBot.Registry]),
+      # supervisor(BucklerBot.UserSupervisor, []),
+      # supervisor(BucklerBot.Repo, []),
       supervisor(DB.Repo, [])
     ]
 
