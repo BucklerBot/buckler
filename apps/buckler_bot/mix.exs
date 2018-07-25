@@ -40,7 +40,7 @@ defmodule BucklerBot.Mixfile do
   defp deps do
     [
       {:db, in_umbrella: true},
-      {:agala_telegram, git: "https://github.com/agalaframework/agala_telegram"},
+      {:agala_telegram, "~> 3.0"},
       {:gettext, "~> 0.13.1"}
     ]
   end

@@ -10,6 +10,7 @@ defmodule BucklerBot.Handlers.Private do
   }, _) do
     conn
     |> send_message(chat_id, "BucklerBot is now working")
+    conn
   end
 
   def call(conn = %Agala.Conn{
@@ -35,5 +36,15 @@ defmodule BucklerBot.Handlers.Private do
       first_name: first_name),
       parse_mode: "Markdown"
     )
+    conn
+  end
+
+  #################################################
+
+  def call(conn = %Agala.Conn{
+    request: request
+  }, _) do
+    Logger.error("Unexpected message:\n#{inspect request}")
+    conn
   end
 end
