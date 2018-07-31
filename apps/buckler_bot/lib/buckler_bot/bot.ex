@@ -5,8 +5,7 @@ defmodule BucklerBot.Bot do
     chain: BucklerBot.Chain,
     provider_params: %Agala.Provider.Telegram.Conn.ProviderParams{
       poll_timeout: :infinity,
-      # token: Application.get_env(:buckler_bot, :telegram)[:token]
-      token: "448886421:AAHCwfLw4sr5js-4hp6qlGDqCjAJq4bSZJw"
+      token: Application.get_env(:buckler_bot, :telegram)[:token]
     }
   ]
 end
