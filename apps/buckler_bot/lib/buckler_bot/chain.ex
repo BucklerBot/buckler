@@ -9,6 +9,7 @@ defmodule BucklerBot.Chain do
   alias BucklerBot.I18n
   require Logger
 
+  # Forward private messages into specific chain
   def handle(
         conn = %Agala.Conn{
           request: %{"message" => %{"chat" => %{"type" => "private"}}}
@@ -19,10 +20,15 @@ defmodule BucklerBot.Chain do
     BucklerBot.Handlers.Private.call(conn, [])
   end
 
+  # done
   def handle(
         conn = %Agala.Conn{
           request: %{
-            "message" => %{"chat" => %{"id" => chat_id}, "left_chat_member" => %{"id" => user_id}, "message_id" => leave_message_id}
+            "message" => %{
+              "chat" => %{"id" => chat_id},
+              "left_chat_member" => %{"id" => user_id},
+              "message_id" => leave_message_id
+            }
           }
         },
         _
@@ -41,6 +47,7 @@ defmodule BucklerBot.Chain do
     conn |> Agala.Conn.halt()
   end
 
+  # done
   def handle(
         conn = %Agala.Conn{
           request: %{
@@ -57,8 +64,11 @@ defmodule BucklerBot.Chain do
             }
           }
         },
+        _
       ) do
     Logger.debug("New user connected: #{first_name}")
+
+    ### Firstly we check if this user is not valid by our validator
 
     with {:ok, chat} <- Connections.get_or_create_chat(chat_id),
          %{captcha: captcha, answer: answer} <- BucklerBot.Captcha.generate_captcha(chat.lang),
@@ -70,7 +80,6 @@ defmodule BucklerBot.Chain do
         reply_to_message_id: message_id,
         parse_mode: "Markdown"
       )
-      # |> IO.inspect(label: "New message creation response")
       |> handle_welcome_message(user_id)
     end
 
@@ -88,9 +97,103 @@ defmodule BucklerBot.Chain do
               "message_id" => message_id,
               "text" => _
             }
-          }}, user_id
+          }},
+         user_id
        ) do
     DB.Connections.update_welcome_message(chat_id, user_id, message_id)
+  end
+
+  ### Dealing with incoming messages
+  def handle(
+        conn = %Agala.Conn{
+          request: %{
+            "message" => %{
+              "text" => text,
+              "message_id" => message_id,
+              "chat" => %{
+                "id" => chat_id
+              },
+              "from" => %{
+                "id" => user_id
+              }
+            }
+          }
+        },
+        _
+      ) do
+    case Connections.user_unauthorized?(chat_id, user_id) do
+      {true, user} -> process_captcha_check(user.answer == text, conn, message_id, user)
+      _ -> :user_authorized_do_nothing
+    end
+
+    conn |> Agala.Conn.halt()
+  end
+
+  ### The same with media message
+  def handle(
+        conn = %Agala.Conn{
+          request: %{
+            "message" => %{
+              "message_id" => message_id,
+              "chat" => %{
+                "id" => chat_id
+              },
+              "from" => %{
+                "id" => user_id
+              }
+            }
+          }
+        },
+        _
+      ) do
+    Logger.debug("New media message!")
+
+    case Connections.user_unauthorized?(chat_id, user_id) do
+      {true, user} -> process_captcha_check(false, conn, message_id, user)
+      _ -> :user_authorized_do_nothing
+    end
+
+    conn |> Agala.Conn.halt()
+  end
+
+  # OK case
+  defp process_captcha_check(true, conn, message_id, user) do
+    delete_message(conn, user.chat_id, user.welcome_message_id)
+    delete_message(conn, user.chat_id, message_id)
+    Connections.delete_chatuser(user.chat_id, user.user_id)
+  end
+
+  # Fail case
+  defp process_captcha_check(
+         false,
+         conn,
+         message_id,
+         %{attempts: attempts} = user
+       )
+       when attempts < 2 do
+    # ban here
+    {:ok, user} = Connections.delete_chatuser(user.chat_id, user.user_id)
+    delete_message(conn, user.chat_id, user.welcome_message_id)
+    delete_message(conn, user.chat_id, user.connected_message_id)
+    delete_message(conn, user.chat_id, message_id)
+    kick_chat_member(conn, user.chat_id, user.user_id)
+  end
+
+  defp process_captcha_check(false, conn, message_id, user) do
+    # decrease attempt
+    with %{captcha: captcha, answer: answer} <- BucklerBot.Captcha.generate_captcha(user.lang),
+         {:ok, user} <- Connections.decrease_attempts(user.chat_id, user.user_id, answer) do
+      delete_message(conn, user.chat_id, user.welcome_message_id)
+      delete_message(conn, user.chat_id, message_id)
+
+      send_message(
+        conn,
+        user.chat_id,
+        I18n.welcome_message(user.lang, user.name, captcha, user.attempts),
+        reply_to_message_id: user.connected_message_id,
+        parse_mode: "Markdown"
+      )
+    end
   end
 
   #################################################

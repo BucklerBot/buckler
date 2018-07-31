@@ -75,6 +75,9 @@ defmodule DB.Connections do
     end
   end
 
+  @doc """
+  This function will update id for welcome message from buckler bot stored in the database.
+  """
   def update_welcome_message(chat_id, user_id, message_id) do
     with customer when not is_nil(customer) <- get_chatuser(chat_id, user_id) do
       Repo.update(Customer.changeset(customer, %{welcome_message_id: message_id}))
