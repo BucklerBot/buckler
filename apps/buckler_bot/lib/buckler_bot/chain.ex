@@ -69,18 +69,26 @@ defmodule BucklerBot.Chain do
     Logger.debug("New user connected: #{first_name}")
 
     ### Firstly we check if this user is not valid by our validator
+    case BucklerBot.NameValidator.validate(%{first_name: first_name}) do
+      {:ok, _} ->
+        with {:ok, chat} <- Connections.get_or_create_chat(chat_id),
+             %{captcha: captcha, answer: answer} <-
+               BucklerBot.Captcha.generate_captcha(chat.lang),
+             {:ok, user} <-
+               Connections.connect_user(chat_id, user_id, first_name, answer, message_id) do
+          send_message(
+            conn,
+            chat_id,
+            I18n.welcome_message(user.lang, user.name, captcha, user.attempts),
+            reply_to_message_id: message_id,
+            parse_mode: "Markdown"
+          )
+          |> handle_welcome_message(user_id)
+        end
 
-    with {:ok, chat} <- Connections.get_or_create_chat(chat_id),
-         %{captcha: captcha, answer: answer} <- BucklerBot.Captcha.generate_captcha(chat.lang),
-         {:ok, user} <- Connections.connect_user(chat_id, user_id, first_name, answer, message_id) do
-      send_message(
-        conn,
-        chat_id,
-        I18n.welcome_message(user.lang, user.name, captcha, user.attempts),
-        reply_to_message_id: message_id,
-        parse_mode: "Markdown"
-      )
-      |> handle_welcome_message(user_id)
+      {:error, _} ->
+        kick_chat_member(conn, chat_id, user_id)
+        delete_message(conn, chat_id, message_id)
     end
 
     conn
@@ -193,6 +201,7 @@ defmodule BucklerBot.Chain do
         reply_to_message_id: user.connected_message_id,
         parse_mode: "Markdown"
       )
+      |> handle_welcome_message(user.user_id)
     end
   end
 

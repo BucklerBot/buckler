@@ -1,8 +1,0 @@
-defmodule BucklerBot.NameValidator do
-  use Agala.Chain.Builder
-
-  chain ValidateMaxNameLength, 50
-  chain ValidateNoChineseSymbols
-  chain ValidateBlackList, ["youtube", "telegram", "раскрутка"]
-
-end
