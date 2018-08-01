@@ -16,8 +16,8 @@ msgstr "*Вычисли*: *%{lh}+%{rh}=...*"
 
 #: lib/buckler_bot/handlers/private.ex:21
 msgid "Hello, %{first_name}!\n\nI'm *BucklerBot*, and I'll defend your group or chat from dirsty spammers.\n\n1. Add me as Administrator to your group.\n2. Give me only two rights: to *Ban users* and to *Delete messages*\n3. *???*\n4. Enjoy!\n\nIf you have any questions or issues - welcome to our project's\nrepo - https://github.com/BucklerBot/buckler\n"
-msgstr "Привет, %{first_name}!\n\nЯ - *BucklerBot*, and I'll defend your group or chat from dirsty spammers.\n\n1. Add me as Administrator to your group.\n2. Give me only two rights: to *Ban users* and to *Delete messages*\n3. *???*\n4. Enjoy!\n\nIf you have any questions or issues - welcome to our project's\nrepo - https://github.com/BucklerBot/buckler\n"
+msgstr "Привет, %{first_name}!\n\nЯ - *BucklerBot*, и я буду защищать твою группу от грязных спаммеров.\n\n1. Добавь меня в свою группу в качестве *Администратора*.\n2. Дай мне только два права: *Банить пользователей* и *Удалять сообщения*\n3. *???*\n4. Наслаждайся!\n\nЕсли есть вопросы или предложения - приходи в \nрепозиторий - https://github.com/BucklerBot/buckler\n"
 
 #: lib/buckler_bot/i18n.ex:8
 msgid "Hello, *%{name}*!\n\nPlease, solve the captcha:\n\n%{captcha}\n\nAttempts remaining: *%{attempts}*\nIf you don't answer - you'll get banned from the channel...\nGood luck!\n"
-msgstr "Привет, *%{name}*!\n\nПожалуйста, реши капчу:\n\n%{captcha}\n\nОсталось попыток: *%{attempts}*\nЕсли не решишь - будешь забанен навеки...\nУдачи!\n"
+msgstr "Привет, *%{name}*!\n\nПожалуйста, реши капчу:\n\n%{captcha}\n\nОсталось попыток: *%{attempts}*\nЕсли не решишь - забаню навеки...\nУдачи!\n"
