@@ -22,7 +22,5 @@ erl_crash.dump
 # Binaries
 bin
 
-# DETS
-buckler_bot_repo
-
-/apps/buckler_bot/testdb
+# Elixir LS
+.elixir_ls
