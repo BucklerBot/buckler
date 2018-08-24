@@ -4,6 +4,8 @@ defmodule DB.Chat do
 
   @cast_fields [:id, :lang, :attempts]
   @required_fields [:id]
+
+  @primary_key {:id, :string, autogenerate: false}
   schema "chats" do
     field :lang, :string, default: "en"
     field :attempts, :integer, default: 3

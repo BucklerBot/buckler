@@ -19,7 +19,7 @@ defmodule DB.Customer do
     field :lang, :string
     field :attempts, :integer
 
-    belongs_to :chat, DB.Chat, type: :integer
+    belongs_to :chat, DB.Chat, type: :string
   end
 
   def changeset(struct, params \\ %{}) do
@@ -27,5 +27,6 @@ defmodule DB.Customer do
     |> cast(params, @cast_fields)
     |> validate_required(@required_fields)
     |> assoc_constraint(:chat)
+    |> unique_constraint(:user_id, name: :customers_chat_id_user_id_index)
   end
 end

@@ -10,8 +10,12 @@ defmodule DB.Connections do
     select: c
   end
 
-  def get_chatuser(chat_id, user_id), do: Repo.one(chatuser_query(chat_id, user_id))
-
+  def get_chatuser(chat_id, user_id) do
+    case Repo.one(chatuser_query(chat_id, user_id)) do
+      nil -> {:error, :not_found}
+      user -> {:ok, user}
+    end
+  end
   def get_or_create_chat(chat_id) do
     case Repo.get(Chat, chat_id) do
       nil -> create_chat(%{id: chat_id})
@@ -22,7 +26,7 @@ defmodule DB.Connections do
   def create_chat(params) do
     %Chat{}
     |> Chat.changeset(params)
-    |> Repo.insert
+    |> Repo.insert()
   end
 
   def create_chatuser(chat, user_id, name, answer, connected_message_id) do
@@ -35,7 +39,7 @@ defmodule DB.Connections do
       lang: chat.lang,
       attempts: chat.attempts
     })
-    |> Repo.insert
+    |> Repo.insert()
   end
 
   def connect_user(chat_id, user_id, name, answer, connected_message_id) do
@@ -55,13 +59,13 @@ defmodule DB.Connections do
   end
 
   def decrease_attempts(chat_id, user_id, answer) do
-    with customer when not is_nil(customer) <- get_chatuser(chat_id, user_id) do
+    with {:ok, customer} <- get_chatuser(chat_id, user_id) do
       Repo.update(Customer.changeset(customer, %{answer: answer, attempts: customer.attempts-1}))
     end
   end
 
   def delete_chatuser(chat_id, user_id) do
-    with customer when not is_nil(customer) <- get_chatuser(chat_id, user_id) do
+    with {:ok, customer} <- get_chatuser(chat_id, user_id) do
       Repo.delete(customer)
     else
       _ -> Logger.error("Delete user not found")
@@ -70,8 +74,8 @@ defmodule DB.Connections do
 
   def user_unauthorized?(chat_id, user_id) do
     case get_chatuser(chat_id, user_id) do
-      nil -> false
-      customer -> {true, customer}
+      {:error, _ } -> false
+      {:ok, customer} -> {true, customer}
     end
   end
 
@@ -79,7 +83,7 @@ defmodule DB.Connections do
   This function will update id for welcome message from buckler bot stored in the database.
   """
   def update_welcome_message(chat_id, user_id, message_id) do
-    with customer when not is_nil(customer) <- get_chatuser(chat_id, user_id) do
+    with {:ok, customer} <- get_chatuser(chat_id, user_id) do
       Repo.update(Customer.changeset(customer, %{welcome_message_id: message_id}))
     end
   end

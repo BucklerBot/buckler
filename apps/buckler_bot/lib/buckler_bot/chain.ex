@@ -33,6 +33,8 @@ defmodule BucklerBot.Chain do
         },
         _
       ) do
+    chat_id = "#{chat_id}"
+
     case Connections.user_unauthorized?(chat_id, user_id) do
       {true, user} ->
         Connections.delete_chatuser(chat_id, user_id)
@@ -67,6 +69,7 @@ defmodule BucklerBot.Chain do
         _
       ) do
     Logger.debug("New user connected: #{first_name}")
+    chat_id = "#{chat_id}"
 
     ### Firstly we check if this user is not valid by our validator
     case BucklerBot.NameValidator.validate(%{first_name: first_name}) do
@@ -74,6 +77,7 @@ defmodule BucklerBot.Chain do
         with {:ok, chat} <- Connections.get_or_create_chat(chat_id),
              %{captcha: captcha, answer: answer} <-
                BucklerBot.Captcha.generate_captcha(chat.lang),
+             {:error, :not_found} <- Connections.get_chatuser(chat_id, user_id),
              {:ok, user} <-
                Connections.connect_user(chat_id, user_id, first_name, answer, message_id) do
           send_message(
@@ -108,6 +112,7 @@ defmodule BucklerBot.Chain do
           }},
          user_id
        ) do
+    chat_id = "#{chat_id}"
     DB.Connections.update_welcome_message(chat_id, user_id, message_id)
   end
 
@@ -129,6 +134,8 @@ defmodule BucklerBot.Chain do
         },
         _
       ) do
+    chat_id = "#{chat_id}"
+
     case Connections.user_unauthorized?(chat_id, user_id) do
       {true, user} -> process_captcha_check(user.answer == text, conn, message_id, user)
       _ -> :user_authorized_do_nothing
@@ -155,6 +162,7 @@ defmodule BucklerBot.Chain do
         _
       ) do
     Logger.debug("New media message!")
+    chat_id = "#{chat_id}"
 
     case Connections.user_unauthorized?(chat_id, user_id) do
       {true, user} -> process_captcha_check(false, conn, message_id, user)
