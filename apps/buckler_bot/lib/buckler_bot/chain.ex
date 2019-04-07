@@ -87,7 +87,7 @@ defmodule BucklerBot.Chain do
             reply_to_message_id: message_id,
             parse_mode: "Markdown"
           )
-          |> handle_welcome_message(user_id)
+          |> handle_welcome_message(user_id, chat_id)
         end
 
       {:error, _} ->
@@ -110,10 +110,18 @@ defmodule BucklerBot.Chain do
               "text" => _
             }
           }},
-         user_id
+         user_id,
+         chat_id
        ) do
     chat_id = "#{chat_id}"
     DB.Connections.update_welcome_message(chat_id, user_id, message_id)
+  end
+
+  # Fallback not to crash
+  defp handle_welcome_message(
+    {:ok, _}, user_id, chat_id
+  ) do
+    DB.Connections.delete_chatuser(chat_id, user_id)
   end
 
   ### Dealing with incoming messages
@@ -209,7 +217,7 @@ defmodule BucklerBot.Chain do
         reply_to_message_id: user.connected_message_id,
         parse_mode: "Markdown"
       )
-      |> handle_welcome_message(user.user_id)
+      |> handle_welcome_message(user.user_id, user.chat_id)
     end
   end
 
