@@ -24,7 +24,7 @@ defmodule Buckler.Mixfile do
   # and cannot be accessed from applications inside the apps folder
   defp deps do
     [
-      {:distillery, "~> 1.3", runtime: false},
+      {:distillery, "~> 2.0", runtime: false}
     ]
   end
 

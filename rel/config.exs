@@ -2,7 +2,8 @@
 # They can then be used by adding `plugin MyPlugin` to
 # either an environment, or release definition, where
 # `MyPlugin` is the name of the plugin module.
-Path.join(["rel", "plugins", "*.exs"])
+~w(rel plugins *.exs)
+|> Path.join()
 |> Path.wildcard()
 |> Enum.map(&Code.eval_file(&1))
 
@@ -13,7 +14,7 @@ use Mix.Releases.Config,
     default_environment: Mix.env()
 
 # For a full list of config options for both releases
-# and environments, visit https://hexdocs.pm/distillery/configuration.html
+# and environments, visit https://hexdocs.pm/distillery/config/distillery.html
 
 
 # You may define one or more environments in this file,
@@ -30,15 +31,14 @@ environment :dev do
   # dev mode.
   set dev_mode: true
   set include_erts: false
-  set cookie: :"OOjxZrybU>O}8z<^fsx2jlQ}^RgV|XXXcaJtRsKPkei2*,ot8<D$o4iI><v2*G:y"
+  set cookie: :"nTC0O=O5|hn7@2T[]7`[k|qclg.`sVw~YV6g_tA2r&,3/v1m=>F~@/7Hzu@NAsyQ"
 end
 
 environment :prod do
-  set vm_args: "rel/vm.args"
   set include_erts: true
   set include_src: false
-  set cookie: :"s<jYNRfYQEG=[bJ*7b(!|6tZ<fHrEc>2WC{LZ4xjxkAmR%pBgui=]Q%f/Y`5(wdj"
-  set output_dir: "rel/buckler_bot"
+  set cookie: :"/Sye2@KXe;ea*<V*:|2]`LU&RIz_s}h2y2S3=aQ=,PO,[I]9N[&g9gslg:jP4GB="
+  set vm_args: "rel/vm.args"
 end
 
 # You may define one or more releases in this file.
@@ -50,7 +50,8 @@ release :buckler do
   set version: "0.1.0"
   set applications: [
     :runtime_tools,
-    buckler_bot: :permanent
+    buckler_bot: :permanent,
+    db: :permanent
   ]
 end
 
